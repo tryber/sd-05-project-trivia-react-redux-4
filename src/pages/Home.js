@@ -1,6 +1,7 @@
-import React, { Component } from 'react'
+import React, { Component } from 'react';
+import { Link } from 'react-router-dom';
 
-export class Home extends Component {
+class Home extends Component {
   inputForm() {
     return (
       <form>
@@ -15,15 +16,18 @@ export class Home extends Component {
 
   configButton() {
     return (
-      <button type="button" data-testid="btn-settings"></button>
+      <Link to="/settings">
+        <button type="button" data-testid="btn-settings">Configurações</button>
+      </Link>
     );
   }
 
   render() {
     return (
-      <div>
+      <section>
         {this.inputForm()}
-      </div>
+        {this.configButton()}
+      </section>
     )
   }
 }
