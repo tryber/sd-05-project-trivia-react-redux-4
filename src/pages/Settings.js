@@ -1,5 +1,5 @@
 // Aqui vai o bonus
-import React, { Component } from 'react'
+import React, { Component } from 'react';
 
 export default class Settings extends Component {
   render() {
@@ -8,5 +8,5 @@ export default class Settings extends Component {
         Settings
       </div>
     );
-  };
+  }
 }

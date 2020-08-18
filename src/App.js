@@ -6,6 +6,7 @@ import './App.css';
 
 import Home from './pages/Home';
 import Settings from './pages/Settings';
+import Game from './pages/Game';
 
 export default function App() {
   return (
@@ -18,6 +19,7 @@ export default function App() {
           </p>
           <Switch>
             <Route exact path="/" component={Home} />
+            <Route path="/game" component={Game} />
             <Route path="/settings" component={Settings} />
           </Switch>
         </header>
