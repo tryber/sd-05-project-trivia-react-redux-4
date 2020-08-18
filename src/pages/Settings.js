@@ -1,13 +1,12 @@
+// Aqui vai o bonus
 import React, { Component } from 'react';
 
-class Game extends Component {
+export default class Settings extends Component {
   render() {
     return (
       <div>
-        TRIVIA GAME
+        Settings
       </div>
     );
   }
 }
-
-export default Game;
