@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
 import tokenRequest from '../service/api';
 
-function configButton() {
+function settingsButton() {
   return (
     <Link to="/settings">
       <button type="button" data-testid="btn-settings">
@@ -57,7 +57,7 @@ class Home extends Component {
     return (
       <section>
         {this.inputForm()}
-        {configButton()}
+        {settingsButton()}
       </section>
     );
   }
