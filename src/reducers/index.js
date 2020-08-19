@@ -1,5 +1,7 @@
 import { combineReducers } from 'redux';
 
-const rootReducer = combineReducers({ });
+import playerReducer from './playerReducer';
+
+const rootReducer = combineReducers({ playerReducer });
 
 export default rootReducer;
