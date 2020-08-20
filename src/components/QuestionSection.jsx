@@ -15,7 +15,9 @@ class QuestionSection extends Component {
       loading: true,
       questions: [],
       index: 0,
+      timer: 30,
     };
+    this.timerCountdown = this.timerCountdown.bind(this);
   }
 
   componentDidMount() {
@@ -25,10 +27,28 @@ class QuestionSection extends Component {
       .then((data) => this.setState({ questions: [...data], loading: false }));
   }
 
+  timerCountdown() {
+    const { timer } = this.state
+      if (timer > 0) {
+        setTimeout(() => {
+          this.setState({
+            timer: timer - 1,
+          });
+        }, 1000);
+      };
+      if (timer === 0) {
+        clearTimeout(timer);
+      };
+  };
+
   render() {
-    const { questions, loading } = this.state;
+    const { questions, loading, timer } = this.state;
     return !loading ? (
       <div>
+        {this.timerCountdown()}
+        <section>
+          <h3>{timer}</h3>
+        </section>
         {questions.map((trivia) => {
           const { category, correct_answer: correctAnswer, question, incorrect_answers } = trivia;
           return (

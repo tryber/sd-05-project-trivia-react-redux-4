@@ -28,8 +28,8 @@ const mapStateToProps = (state) => ({
 
 GameHeader.propTypes = {
   player: PropTypes.shape({
-    name: PropTypes.object.isRequired,
-    score: PropTypes.object.isRequired,
+    name: PropTypes.string.isRequired,
+    score: PropTypes.number.isRequired,
   }).isRequired,
 };
 
