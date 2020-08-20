@@ -18,29 +18,45 @@ class QuestionSection extends Component {
       loading: true,
       questions: [],
       index: 0,
+      shuffled: [],
     };
   }
 
-  componentDidMount() {
-    fetch('https://opentdb.com/api.php?amount=5')
+  async componentDidMount() {
+    await fetch('https://opentdb.com/api.php?amount=5')
       .then((response) => response.json())
       .then((obj) => obj.results)
-      .then((data) => this.setState({ questions: [...data], loading: false }));
+      .then((data) => {
+        this.setState({
+          questions: [...data],
+        })
+      });
+      const { questions } = this.state;
+      const shuffled = [...questions];
+      for (let index in shuffled) {
+        shuffled[index] = shuffle(shuffled[index].correct_answer, shuffled[index].incorrect_answers);
+      }
+      this.setState({
+        shuffled: shuffled,
+        loading: false
+      }); 
   }
 
   render() {
-    const { questions, loading } = this.state;
+    const { questions, loading, index, shuffled } = this.state;
+    console.log(shuffled);
     return !loading ? (
       <div>
         <Timer />
-        {questions.map((trivia) => {
+        {questions
+          .map((trivia) => {
           console.log(trivia);
           const { category, correct_answer: correctAnswer, question, incorrect_answers } = trivia;
           return (
             <section>
               <p data-testid="question-category">{category}</p>
               <p data-testid="question-text">{question}</p>
-              {shuffle(correctAnswer, incorrect_answers).map((answer, index) => {
+              {shuffled[0].map((answer, index) => {
                 if (answer === correctAnswer) {
                   return <button data-testid="correct-answer">{correctAnswer}</button>;
                 }
