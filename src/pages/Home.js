@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { Link } from 'react-router-dom';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
+
 import tokenRequest from '../service/api';
+import { getPlayerInfo } from '../actions/playerActions';
 
 function settingsButton() {
   return (
@@ -16,21 +20,28 @@ class Home extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      email: '',
       name: '',
+      gravatarEmail: '',
     };
   }
 
+  getUserInfo() {
+    const { playerInfo } = this.props;
+    const { name, gravatarEmail } = this.state;
+    playerInfo(name, gravatarEmail);
+    tokenRequest();
+  }
+
   inputForm() {
-    const { name, email } = this.state;
+    const { name, gravatarEmail } = this.state;
     return (
       <form>
         <label htmlFor="player-email">E-mail do Gravatar</label>
         <input
           type="email" id="player-email"
           data-testid="input-gravatar-email"
-          value={email}
-          onChange={(event) => this.setState({ email: event.target.value })}
+          value={gravatarEmail}
+          onChange={(event) => this.setState({ gravatarEmail: event.target.value })}
         />
         <label htmlFor="player-name">Nome do jogador</label>
         <input
@@ -43,8 +54,8 @@ class Home extends Component {
           <button
             type="button"
             data-testid="btn-play"
-            onClick={() => tokenRequest()}
-            disabled={(name.length && email.length) === 0}
+            onClick={() => this.getUserInfo()}
+            disabled={(name.length && gravatarEmail.length) === 0}
           >
             Jogar
           </button>
@@ -63,4 +74,12 @@ class Home extends Component {
   }
 }
 
-export default Home;
+const mapDispatchToProps = {
+  playerInfo: getPlayerInfo,
+};
+
+Home.propTypes = {
+  playerInfo: PropTypes.func.isRequired,
+};
+
+export default connect(null, mapDispatchToProps)(Home);

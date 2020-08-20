@@ -1,11 +1,17 @@
-import GET_PLAYER_INFO from './types';
+import { GET_PLAYER_INFO, GET_PLAYER_SCORE } from './types';
 
-const getPlayerInfo = (name, email) => {
-  return {
-    type: GET_PLAYER_INFO,
+export const getPlayerInfo = (name, email) => ({
+  type: GET_PLAYER_INFO,
+  player: {
     name,
     email,
-  };
-}
+  },
+});
 
-export default getPlayerInfo;
+export const getPlayerScore = (assertions, score) => ({
+  type: GET_PLAYER_SCORE,
+  player: {
+    assertions,
+    score,
+  },
+});

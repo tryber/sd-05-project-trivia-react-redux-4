@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import GameHeader from '../components/GameHeader';
+import QuestionSection from '../components/QuestionSection';
 
 class Game extends Component {
   render() {
@@ -7,6 +8,7 @@ class Game extends Component {
       <div>
         <GameHeader />
         TRIVIA GAME
+        <QuestionSection />
       </div>
     );
   }

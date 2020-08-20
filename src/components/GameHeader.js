@@ -1,11 +1,12 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import md5 from 'crypto-js/md5';
 
 class GameHeader extends Component {
   render() {
     const avatar = localStorage.getItem('token');
-    const { name, score } = this.props;
+    const { name, score } = this.props.player;
 
     return (
       <header>
@@ -17,15 +18,19 @@ class GameHeader extends Component {
         <h1 data-testid="header-player-name">{name}</h1>
         <p data-testid="header-score">{score}</p>
       </header>
-    )
-  };
+    );
+  }
 }
 
-const mapStateToProps = (state) => {
-  return {
-    name: state.playerReducer.name,
-    score: state.playerReducer.score,
-  };
-}
+const mapStateToProps = (state) => ({
+  player: state.playerReducer.player,
+});
+
+GameHeader.propTypes = {
+  player: PropTypes.shape({
+    name: PropTypes.object.isRequired,
+    score: PropTypes.object.isRequired,
+  }).isRequired,
+};
 
 export default connect(mapStateToProps)(GameHeader);
