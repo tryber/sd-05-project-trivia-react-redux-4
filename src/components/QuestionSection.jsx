@@ -1,12 +1,15 @@
 import React, { Component } from 'react';
+import Timer from './Timer';
 
-// function shuffleAnwsers(correct, incorrect) {
-//   const alternatives = [...incorrect, correct].length;
-//   const alternativesOrder = [];
-//   for (let i = 0; i < alternatives; i += 1) {
-//     alternativesOrder.push(Math.floor(Math.random() * alternatives));
-//   }
-// }
+// https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array#6274398
+function shuffle(correct, incorrect) {
+  const array = [correct, ...incorrect];
+  for (let i = array.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [array[i], array[j]] = [array[j], array[i]];
+  }
+  return array;
+}
 
 class QuestionSection extends Component {
   constructor(props) {
@@ -15,9 +18,7 @@ class QuestionSection extends Component {
       loading: true,
       questions: [],
       index: 0,
-      timer: 30,
     };
-    this.timerCountdown = this.timerCountdown.bind(this);
   }
 
   componentDidMount() {
@@ -27,38 +28,24 @@ class QuestionSection extends Component {
       .then((data) => this.setState({ questions: [...data], loading: false }));
   }
 
-  timerCountdown() {
-    const { timer } = this.state
-      if (timer > 0) {
-        setTimeout(() => {
-          this.setState({
-            timer: timer - 1,
-          });
-        }, 1000);
-      };
-      if (timer === 0) {
-        clearTimeout(timer);
-      };
-  };
-
   render() {
-    const { questions, loading, timer } = this.state;
+    const { questions, loading } = this.state;
     return !loading ? (
       <div>
-        {this.timerCountdown()}
-        <section>
-          <h3>{timer}</h3>
-        </section>
+        <Timer />
         {questions.map((trivia) => {
+          console.log(trivia);
           const { category, correct_answer: correctAnswer, question, incorrect_answers } = trivia;
           return (
             <section>
               <p data-testid="question-category">{category}</p>
               <p data-testid="question-text">{question}</p>
-              <button data-testid="correct-answer">{correctAnswer}</button>
-              {incorrect_answers.map((answer, index) => (
-                <button data-testid={`wrong-answer-${index}`}>{answer}</button>
-              ))}
+              {shuffle(correctAnswer, incorrect_answers).map((answer, index) => {
+                if (answer === correctAnswer) {
+                  return <button data-testid="correct-answer">{correctAnswer}</button>;
+                }
+                return <button data-testid={`wrong-answer-${index}`}>{answer}</button>;
+              })}
             </section>
           );
         })}
