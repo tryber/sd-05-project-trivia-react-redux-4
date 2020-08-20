@@ -1,3 +1,2 @@
-// Contém todos os types para as actions
-// Modelo:
-// export const TYPE_EXEMPLO = 'TYPE_EXEMPLO';
+export const GET_PLAYER_INFO = 'GET_PLAYER_INFO';
+export const GET_PLAYER_SCORE = 'GET_PLAYER_SCORE';
