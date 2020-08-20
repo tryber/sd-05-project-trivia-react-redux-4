@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
 import Timer from './Timer';
+import './Components.css';
+
 
 // https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array#6274398
 function shuffle(correct, incorrect) {
@@ -18,25 +20,46 @@ class QuestionSection extends Component {
       loading: true,
       questions: [],
       index: 0,
+      wrongAnswer: '',
+      rightAnswer: '',
+      shuffledOrder: [],
     };
   }
-
+  
   componentDidMount() {
     fetch('https://opentdb.com/api.php?amount=5')
-      .then((response) => response.json())
-      .then((obj) => obj.results)
-      .then((data) => this.setState({ questions: [...data], loading: false }));
+    .then((response) => response.json())
+    .then((obj) => obj.results)
+    .then((data) => this.setState({ questions: [...data], loading: false }));
   }
+  
 
-  updateIndex() {
-    this.setState((prevState) => ({ index: prevState.index + 1 }))
+  // shouldComponentUpdate(nextProps, nextState) {
+  //   const { index, loading } = this.state;
+  //   if (index === nextState.index || loading === nextState.loading) {
+  //     alert('False')
+  //     return false;
+  //   } else {
+  //     alert('True')
+  //     return true;
+  //   }
+  // }
+
+  nextQuestion() {
+    this.setState((prevState) => ({ index: prevState.index + 1, rightAnswer: '', wrongAnswer: '',}))
+  }
+  
+  // https://stackoverflow.com/questions/41978408/changing-style-of-a-button-on-click
+  highlightAnswers() {
+    this.setState({ rightAnswer: 'right-answer', wrongAnswer: 'wrong-anwser', });
   }
 
   render() {
-    const { questions, loading, index } = this.state;
+    const { questions, loading, index, rightAnswer, wrongAnswer } = this.state;
     return !loading ? (
       <div>
         <Timer />
+        {questions[0].question}
         {questions
           .filter((_, questionIndex) => questionIndex === index)
           .map((trivia) => {
@@ -47,11 +70,11 @@ class QuestionSection extends Component {
               <p data-testid="question-text">{question}</p>
               {shuffle(correctAnswer, incorrect_answers).map((answer, index) => {
                 if (answer === correctAnswer) {
-                  return <button data-testid="correct-answer">{correctAnswer}</button>;
+                  return <button data-testid="correct-answer" className={rightAnswer} onClick={() => this.highlightAnswers()}>{correctAnswer}</button>;
                 }
-                return <button data-testid={`wrong-answer-${index}`}>{answer}</button>;
+                return <button data-testid={`wrong-answer-${index}`} className={wrongAnswer} onClick={() => this.highlightAnswers()}>{answer}</button>;
               })}
-              <button data-testid="btn-next" onClick={() => this.updateIndex()}>Próxima</button>
+              <button data-testid="btn-next" onClick={() => this.nextQuestion()}>Próxima</button>
             </section>
           );
         })}
@@ -63,8 +86,3 @@ class QuestionSection extends Component {
 }
 
 export default QuestionSection;
-
-// Após a resposta ser dada, o botão "Próxima" deve aparecer
-
-// O botão "Próxima" deve possuir o atributo data-testid com o valor btn-next
-// Ao clicar nesse botão, a próxima pergunta deve aparecer na tela
