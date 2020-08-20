@@ -28,13 +28,18 @@ class QuestionSection extends Component {
       .then((data) => this.setState({ questions: [...data], loading: false }));
   }
 
+  updateIndex() {
+    this.setState((prevState) => ({ index: prevState.index + 1 }))
+  }
+
   render() {
-    const { questions, loading } = this.state;
+    const { questions, loading, index } = this.state;
     return !loading ? (
       <div>
         <Timer />
-        {questions.map((trivia) => {
-          console.log(trivia);
+        {questions
+          .filter((_, questionIndex) => questionIndex === index)
+          .map((trivia) => {
           const { category, correct_answer: correctAnswer, question, incorrect_answers } = trivia;
           return (
             <section>
@@ -46,6 +51,7 @@ class QuestionSection extends Component {
                 }
                 return <button data-testid={`wrong-answer-${index}`}>{answer}</button>;
               })}
+              <button data-testid="btn-next" onClick={() => this.updateIndex()}>Próxima</button>
             </section>
           );
         })}
@@ -57,3 +63,8 @@ class QuestionSection extends Component {
 }
 
 export default QuestionSection;
+
+// Após a resposta ser dada, o botão "Próxima" deve aparecer
+
+// O botão "Próxima" deve possuir o atributo data-testid com o valor btn-next
+// Ao clicar nesse botão, a próxima pergunta deve aparecer na tela
