@@ -1,9 +1,9 @@
-import React, { Component } from "react";
-import md5 from "crypto-js/md5";
+import React, { Component } from 'react';
+import md5 from 'crypto-js/md5';
 
 class FeedbackHeader extends Component {
   render() {
-    const avatar = localStorage.getItem("token");
+    const avatar = localStorage.getItem('token');
 
     return (
       <div>

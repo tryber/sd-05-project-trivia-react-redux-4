@@ -1,6 +1,6 @@
-import React from "react";
-import FeedbackHeader from "../components/FeedbackHeader";
-import { Link } from "react-router-dom";
+import React from 'react';
+import { Link } from 'react-router-dom';
+import FeedbackHeader from '../components/FeedbackHeader';
 
 class Feedback extends React.Component {
   render() {
