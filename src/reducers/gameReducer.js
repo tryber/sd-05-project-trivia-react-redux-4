@@ -1,7 +1,7 @@
 import { GET_GAME_TIMER, STOP_TIMER, NEXT_QUESTION } from '../actions/types';
 
 const initialState = {
-  timer: 30,
+  timer: 5,
   countdown: true,
 };
 

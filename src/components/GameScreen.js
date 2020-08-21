@@ -4,6 +4,7 @@ import PropTypes from 'prop-types';
 import Timer from './Timer';
 import './Components.css';
 import { stopTimer, nextQuestion } from '../actions/gameActions';
+import { getPlayerScore } from '../actions/playerActions';
 
 // https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array#6274398
 function shuffle(correct, incorrect) {
@@ -74,10 +75,13 @@ class GameScreen extends Component {
   }
 
   rightAnswerButton(correctAnswer, rightAnswer) {
+    const { addScore, remainingTime } = this.props;
     return (
       <button
         data-testid="correct-answer" className={rightAnswer}
-        onClick={() => this.highlightAnswers()}
+        disabled={remainingTime === 0}
+        // https://stackoverflow.com/questions/26069238/call-multiple-functions-onclick-reactjs
+        onClick={() => { this.highlightAnswers(); addScore(); }}
       >
         {correctAnswer}
       </button>
@@ -85,9 +89,11 @@ class GameScreen extends Component {
   }
 
   wrongAnswerButton(wrongAnswer, answer, index) {
+    const { remainingTime } = this.props;
     return (
       <button
         data-testid={`wrong-answer-${index}`} className={wrongAnswer}
+        disabled={remainingTime === 0}
         onClick={() => this.highlightAnswers()}
       >
         {answer}
@@ -97,6 +103,7 @@ class GameScreen extends Component {
 
   triviaQuestionsAndAnswers() {
     const { questions, questionIndex, rightAnswer, wrongAnswer, shuffled, hidden } = this.state;
+    const { remainingTime } = this.props;
     return (
       <div>
         {questions
@@ -114,7 +121,10 @@ class GameScreen extends Component {
                     this.wrongAnswerButton(wrongAnswer, answer, index)
                   )),
                 )}
-                <button data-testid="btn-next" hidden={hidden} onClick={() => this.nextQuestion()}>
+                <button
+                  data-testid="btn-next" hidden={hidden && remainingTime !== 0}
+                  onClick={() => this.nextQuestion()}
+                >
                   Próxima
                 </button>
               </section>
@@ -137,14 +147,21 @@ class GameScreen extends Component {
   }
 }
 
+const mapStateToProps = (state) => ({
+  remainingTime: state.gameReducer.timer,
+});
+
 const mapDispatchToProps = {
   stopClock: stopTimer,
   changeQuestion: nextQuestion,
+  addScore: getPlayerScore,
 };
 
 GameScreen.propTypes = {
   stopClock: PropTypes.func.isRequired,
   changeQuestion: PropTypes.func.isRequired,
+  addScore: PropTypes.func.isRequired,
+  remainingTime: PropTypes.number.isRequired,
 };
 
-export default connect(null, mapDispatchToProps)(GameScreen);
+export default connect(mapStateToProps, mapDispatchToProps)(GameScreen);
