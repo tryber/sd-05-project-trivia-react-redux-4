@@ -1,8 +1,14 @@
-import { GET_GAME_TIMER } from './types';
+import { GET_GAME_TIMER, NEXT_QUESTION, STOP_TIMER } from './types';
 
-const getGameTimer = (timer) => ({
+export const getGameTimer = (timer) => ({
   type: GET_GAME_TIMER,
   timer,
-})
+});
 
-export default getGameTimer;
+export const nextQuestion = () => ({
+  type: NEXT_QUESTION,
+});
+
+export const stopTimer = () => ({
+  type: STOP_TIMER,
+});
