@@ -1,14 +1,13 @@
 import React, { Component } from 'react';
 import GameHeader from '../components/GameHeader';
-import QuestionSection from '../components/QuestionSection';
+import GameScreen from '../components/GameScreen';
 
 class Game extends Component {
   render() {
     return (
       <div>
         <GameHeader />
-        TRIVIA GAME
-        <QuestionSection />
+        <GameScreen />
       </div>
     );
   }
