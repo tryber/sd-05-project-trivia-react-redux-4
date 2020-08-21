@@ -66,11 +66,32 @@ class GameScreen extends Component {
     });
   }
 
-  render() {
-    const { questions, loading, questionIndex, rightAnswer, wrongAnswer, shuffled, hidden } = this.state;
-    return !loading ? (
+  rightAnswerButton(correctAnswer, rightAnswer) {
+    return (
+      <button
+        data-testid="correct-answer" className={rightAnswer}
+        onClick={() => this.highlightAnswers()}
+      >
+        {correctAnswer}
+      </button>
+    );
+  }
+
+  wrongAnswerButton(wrongAnswer, answer, index) {
+    return (
+      <button
+        data-testid={`wrong-answer-${index}`} className={wrongAnswer}
+        onClick={() => this.highlightAnswers()}
+      >
+        {answer}
+      </button>
+    );
+  }
+
+  triviaQuestionsAndAnswers() {
+    const { questions, questionIndex, rightAnswer, wrongAnswer, shuffled, hidden } = this.state;
+    return (
       <div>
-        <Timer />
         {questions
           .filter((_, filter) => filter === questionIndex)
           .map((trivia) => {
@@ -79,34 +100,29 @@ class GameScreen extends Component {
               <section>
                 <p data-testid="question-category">{category}</p>
                 <p data-testid="question-text">{question}</p>
-                {shuffled[questionIndex].map((answer, index) => {
-                  if (answer === correctAnswer) {
-                    return (
-                      <button
-                        data-testid="correct-answer"
-                        className={rightAnswer}
-                        onClick={() => this.highlightAnswers()}
-                      >
-                        {correctAnswer}
-                      </button>
-                    );
-                  }
-                  return (
-                    <button
-                      data-testid={`wrong-answer-${index}`}
-                      className={wrongAnswer}
-                      onClick={() => this.highlightAnswers()}
-                    >
-                      {answer}
-                    </button>
-                  );
-                })}
+                {shuffled[questionIndex].map((answer, index) =>
+                  (answer === correctAnswer ? (
+                    this.rightAnswerButton(correctAnswer, rightAnswer)
+                  ) : (
+                    this.wrongAnswerButton(wrongAnswer, answer, index)
+                  )),
+                )}
                 <button data-testid="btn-next" hidden={hidden} onClick={() => this.nextQuestion()}>
                   Próxima
                 </button>
               </section>
             );
           })}
+      </div>
+    );
+  }
+
+  render() {
+    const { loading } = this.state;
+    return !loading ? (
+      <div>
+        <Timer />
+        {this.triviaQuestionsAndAnswers()}
       </div>
     ) : (
       <h1>Loading...</h1>
