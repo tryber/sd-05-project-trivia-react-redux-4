@@ -1,6 +1,9 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import PropTypes from 'prop-types';
 import Timer from './Timer';
 import './Components.css';
+import { stopTimer, nextQuestion } from '../actions/gameActions';
 
 // https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array#6274398
 function shuffle(correct, incorrect) {
@@ -49,21 +52,25 @@ class GameScreen extends Component {
   }
 
   nextQuestion() {
+    const { changeQuestion } = this.props;
     this.setState((prevState) => ({
       questionIndex: prevState.questionIndex + 1,
       rightAnswer: '',
       wrongAnswer: '',
       hidden: true,
     }));
+    changeQuestion();
   }
 
   // https://stackoverflow.com/questions/41978408/changing-style-of-a-button-on-click
   highlightAnswers() {
+    const { stopClock } = this.props;
     this.setState({
       rightAnswer: 'right-answer',
       wrongAnswer: 'wrong-anwser',
       hidden: false,
     });
+    stopClock();
   }
 
   rightAnswerButton(correctAnswer, rightAnswer) {
@@ -130,4 +137,14 @@ class GameScreen extends Component {
   }
 }
 
-export default GameScreen;
+const mapDispatchToProps = {
+  stopClock: stopTimer,
+  changeQuestion: nextQuestion,
+};
+
+GameScreen.propTypes = {
+  stopClock: PropTypes.func.isRequired,
+  changeQuestion: PropTypes.func.isRequired,
+};
+
+export default connect(null, mapDispatchToProps)(GameScreen);
