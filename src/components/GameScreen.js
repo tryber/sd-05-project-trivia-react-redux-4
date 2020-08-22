@@ -74,14 +74,16 @@ class GameScreen extends Component {
     stopClock();
   }
 
-  rightAnswerButton(correctAnswer, rightAnswer) {
+  rightAnswerButton(correctAnswer, rightAnswer, difficulty) {
     const { addScore, remainingTime } = this.props;
+    const multiplier = (difficulty === 'hard') ? 3 : (difficulty === 'medium') ? 2 : 1;
+    const playerScore = 10 + (remainingTime * multiplier);
     return (
       <button
         data-testid="correct-answer" className={rightAnswer}
         disabled={remainingTime === 0}
         // https://stackoverflow.com/questions/26069238/call-multiple-functions-onclick-reactjs
-        onClick={() => { this.highlightAnswers(); addScore(); }}
+        onClick={() => { this.highlightAnswers(); addScore(playerScore); }}
       >
         {correctAnswer}
       </button>
@@ -109,14 +111,14 @@ class GameScreen extends Component {
         {questions
           .filter((_, filter) => filter === questionIndex)
           .map((trivia) => {
-            const { category, correct_answer: correctAnswer, question } = trivia;
+            const { category, correct_answer: correctAnswer, question, difficulty } = trivia;
             return (
               <section>
                 <p data-testid="question-category">{category}</p>
                 <p data-testid="question-text">{question}</p>
                 {shuffled[questionIndex].map((answer, index) =>
                   (answer === correctAnswer ? (
-                    this.rightAnswerButton(correctAnswer, rightAnswer)
+                    this.rightAnswerButton(correctAnswer, rightAnswer, difficulty)
                   ) : (
                     this.wrongAnswerButton(wrongAnswer, answer, index)
                   )),

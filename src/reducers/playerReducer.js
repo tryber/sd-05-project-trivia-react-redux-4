@@ -9,9 +9,32 @@ const INITIAL_STATE = {
   },
 };
 
+function savePlayerInfo(state, action) {
+  localStorage.setItem('state', JSON.stringify({
+    ...state,
+    player: {
+      ...state.player,
+      name: action.player.name,
+      gravatarEmail: action.player.email,
+    },
+  })
+)};
+
+function savePlayerScore(state, action) {
+  localStorage.setItem('state', JSON.stringify({
+    ...state,
+    player: {
+      ...state.player,
+      assertions: state.player.assertions + 1,
+      score: state.player.score + action.player.score,
+    },
+  })
+)};
+
 const playerReducer = (state = INITIAL_STATE, action) => {
   switch (action.type) {
     case GET_PLAYER_INFO:
+      savePlayerInfo(state, action);
       return {
         ...state,
         player: {
@@ -21,6 +44,7 @@ const playerReducer = (state = INITIAL_STATE, action) => {
         },
       };
     case GET_PLAYER_SCORE:
+      savePlayerScore(state, action);
       return {
         ...state,
         player: {
