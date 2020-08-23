@@ -19,9 +19,9 @@ class Feedback extends React.Component {
           <p data-testid="header-score">{results.player.score}</p>
         </header>
         <p data-testid="feedback-text">{message}</p>
-        <h2 data-testid="feedback-total-score">{`Total score: ${results.player.score}`}</h2>
+        <h2 data-testid="feedback-total-score">{results.player.score}</h2>
         <h3 data-testid="feedback-total-question">
-          {`You got ${results.player.assertions}/5 correct answers`}
+          {results.player.assertions}
         </h3>
         <Link to="/">
           <button data-testid="btn-play-again">Jogar novamente</button>
