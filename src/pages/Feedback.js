@@ -23,7 +23,7 @@ class Feedback extends React.Component {
         <h3 data-testid="feedback-total-question">
           {`You got ${results.player.assertions}/5 correct answers`}
         </h3>
-        <Link to="/game">
+        <Link to="/">
           <button data-testid="btn-play-again">Jogar novamente</button>
         </Link>
         <Link to="/ranking">

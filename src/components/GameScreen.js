@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Timer from './Timer';
 import './Components.css';
@@ -18,11 +19,9 @@ function shuffle(correct, incorrect) {
 
 function multiplier(difficulty) {
   let multiple = 0;
-
   if (difficulty === 'hard') multiple = 3;
   else if (difficulty === 'medium') multiple = 2;
   else multiple = 1;
-
   return multiple;
 }
 
@@ -112,6 +111,26 @@ class GameScreen extends Component {
     changeQuestion();
   }
 
+  feedbackButton(hidden, remainingTime) {
+    const { questionIndex } = this.state;
+    return (questionIndex === 4) ? (
+      <Link to="/feedback">
+        <button
+          data-testid="btn-next" hidden={hidden && remainingTime !== 0}
+        >
+          Ver resultado
+        </button>
+      </Link>
+    ) : (
+      <button
+        data-testid="btn-next" hidden={hidden && remainingTime !== 0}
+        onClick={() => this.nextQuestion()}
+      >
+        Próxima
+      </button>
+    );
+  }
+
   triviaQuestionsAndAnswers() {
     const { questions, questionIndex, rightAnswer, wrongAnswer, shuffled, hidden } = this.state;
     const { remainingTime } = this.props;
@@ -132,12 +151,7 @@ class GameScreen extends Component {
                     this.wrongAnswerButton(wrongAnswer, answer, index)
                   )),
                 )}
-                <button
-                  data-testid="btn-next" hidden={hidden && remainingTime !== 0}
-                  onClick={() => this.nextQuestion()}
-                >
-                  Próxima
-                </button>
+                {this.feedbackButton(hidden, remainingTime)}
               </section>
             );
           })}
