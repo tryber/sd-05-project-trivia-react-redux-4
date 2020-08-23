@@ -62,17 +62,6 @@ class GameScreen extends Component {
     });
   }
 
-  nextQuestion() {
-    const { changeQuestion } = this.props;
-    this.setState((prevState) => ({
-      questionIndex: prevState.questionIndex + 1,
-      rightAnswer: '',
-      wrongAnswer: '',
-      hidden: true,
-    }));
-    changeQuestion();
-  }
-
   // https://stackoverflow.com/questions/41978408/changing-style-of-a-button-on-click
   highlightAnswers() {
     const { stopClock } = this.props;
@@ -110,6 +99,17 @@ class GameScreen extends Component {
         {answer}
       </button>
     );
+  }
+
+  nextQuestion() {
+    const { changeQuestion } = this.props;
+    this.setState((prevState) => ({
+      questionIndex: prevState.questionIndex + 1,
+      rightAnswer: '',
+      wrongAnswer: '',
+      hidden: true,
+    }));
+    changeQuestion();
   }
 
   triviaQuestionsAndAnswers() {
