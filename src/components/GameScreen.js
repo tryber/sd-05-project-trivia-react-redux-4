@@ -16,6 +16,16 @@ function shuffle(correct, incorrect) {
   return array;
 }
 
+function multiplier(difficulty) {
+  let multiple = 0;
+
+  if (difficulty === 'hard') multiple = 3;
+  else if (difficulty === 'medium') multiple = 2;
+  else multiple = 1;
+
+  return multiple;
+}
+
 class GameScreen extends Component {
   constructor(props) {
     super(props);
@@ -76,8 +86,7 @@ class GameScreen extends Component {
 
   rightAnswerButton(correctAnswer, rightAnswer, difficulty) {
     const { addScore, remainingTime } = this.props;
-    const multiplier = (difficulty === 'hard') ? 3 : (difficulty === 'medium') ? 2 : 1;
-    const playerScore = 10 + (remainingTime * multiplier);
+    const playerScore = 10 + (remainingTime * multiplier(difficulty));
     return (
       <button
         data-testid="correct-answer" className={rightAnswer}
