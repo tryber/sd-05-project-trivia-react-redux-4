@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import { Link } from 'react-router-dom';
 import PropTypes from 'prop-types';
 import Timer from './Timer';
 import './Components.css';
@@ -14,6 +15,14 @@ function shuffle(correct, incorrect) {
     [array[i], array[j]] = [array[j], array[i]];
   }
   return array;
+}
+
+function multiplier(difficulty) {
+  let multiple = 0;
+  if (difficulty === 'hard') multiple = 3;
+  else if (difficulty === 'medium') multiple = 2;
+  else multiple = 1;
+  return multiple;
 }
 
 class GameScreen extends Component {
@@ -52,17 +61,6 @@ class GameScreen extends Component {
     });
   }
 
-  nextQuestion() {
-    const { changeQuestion } = this.props;
-    this.setState((prevState) => ({
-      questionIndex: prevState.questionIndex + 1,
-      rightAnswer: '',
-      wrongAnswer: '',
-      hidden: true,
-    }));
-    changeQuestion();
-  }
-
   // https://stackoverflow.com/questions/41978408/changing-style-of-a-button-on-click
   highlightAnswers() {
     const { stopClock } = this.props;
@@ -74,14 +72,15 @@ class GameScreen extends Component {
     stopClock();
   }
 
-  rightAnswerButton(correctAnswer, rightAnswer) {
+  rightAnswerButton(correctAnswer, rightAnswer, difficulty) {
     const { addScore, remainingTime } = this.props;
+    const playerScore = 10 + (remainingTime * multiplier(difficulty));
     return (
       <button
         data-testid="correct-answer" className={rightAnswer}
         disabled={remainingTime === 0}
         // https://stackoverflow.com/questions/26069238/call-multiple-functions-onclick-reactjs
-        onClick={() => { this.highlightAnswers(); addScore(); }}
+        onClick={() => { this.highlightAnswers(); addScore(playerScore); }}
       >
         {correctAnswer}
       </button>
@@ -101,6 +100,37 @@ class GameScreen extends Component {
     );
   }
 
+  nextQuestion() {
+    const { changeQuestion } = this.props;
+    this.setState((prevState) => ({
+      questionIndex: prevState.questionIndex + 1,
+      rightAnswer: '',
+      wrongAnswer: '',
+      hidden: true,
+    }));
+    changeQuestion();
+  }
+
+  feedbackButton(hidden, remainingTime) {
+    const { questionIndex } = this.state;
+    return (questionIndex === 4) ? (
+      <Link to="/feedback">
+        <button
+          data-testid="btn-next" hidden={hidden && remainingTime !== 0}
+        >
+          Ver resultado
+        </button>
+      </Link>
+    ) : (
+      <button
+        data-testid="btn-next" hidden={hidden && remainingTime !== 0}
+        onClick={() => this.nextQuestion()}
+      >
+        Próxima
+      </button>
+    );
+  }
+
   triviaQuestionsAndAnswers() {
     const { questions, questionIndex, rightAnswer, wrongAnswer, shuffled, hidden } = this.state;
     const { remainingTime } = this.props;
@@ -109,24 +139,19 @@ class GameScreen extends Component {
         {questions
           .filter((_, filter) => filter === questionIndex)
           .map((trivia) => {
-            const { category, correct_answer: correctAnswer, question } = trivia;
+            const { category, correct_answer: correctAnswer, question, difficulty } = trivia;
             return (
               <section>
                 <p data-testid="question-category">{category}</p>
                 <p data-testid="question-text">{question}</p>
                 {shuffled[questionIndex].map((answer, index) =>
                   (answer === correctAnswer ? (
-                    this.rightAnswerButton(correctAnswer, rightAnswer)
+                    this.rightAnswerButton(correctAnswer, rightAnswer, difficulty)
                   ) : (
                     this.wrongAnswerButton(wrongAnswer, answer, index)
                   )),
                 )}
-                <button
-                  data-testid="btn-next" hidden={hidden && remainingTime !== 0}
-                  onClick={() => this.nextQuestion()}
-                >
-                  Próxima
-                </button>
+                {this.feedbackButton(hidden, remainingTime)}
               </section>
             );
           })}

@@ -8,10 +8,9 @@ export const getPlayerInfo = (name, email) => ({
   },
 });
 
-export const getPlayerScore = (assertions, score) => ({
+export const getPlayerScore = (score) => ({
   type: GET_PLAYER_SCORE,
   player: {
-    assertions,
     score,
   },
 });
