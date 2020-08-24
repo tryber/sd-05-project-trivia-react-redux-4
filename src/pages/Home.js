@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import PropTypes from 'prop-types';
 
 import tokenRequest from '../service/api';
-import { getPlayerInfo } from '../actions/playerActions';
+import { getPlayerInfo, getPlayerScore } from '../actions/playerActions';
 
 function settingsButton() {
   return (
@@ -32,6 +32,11 @@ class Home extends Component {
     tokenRequest();
   }
 
+  resetScore() {
+    const { playerScore } = this.props;
+    playerScore(0, 0);
+  }
+
   inputForm() {
     const { name, gravatarEmail } = this.state;
     return (
@@ -54,7 +59,7 @@ class Home extends Component {
           <button
             type="button"
             data-testid="btn-play"
-            onClick={() => this.getUserInfo()}
+            onClick={() => { this.getUserInfo(); this.resetScore(); }}
             disabled={(name.length && gravatarEmail.length) === 0}
           >
             Jogar
@@ -76,10 +81,12 @@ class Home extends Component {
 
 const mapDispatchToProps = {
   playerInfo: getPlayerInfo,
+  playerScore: getPlayerScore,
 };
 
 Home.propTypes = {
   playerInfo: PropTypes.func.isRequired,
+  playerScore: PropTypes.func.isRequired,
 };
 
 export default connect(null, mapDispatchToProps)(Home);
