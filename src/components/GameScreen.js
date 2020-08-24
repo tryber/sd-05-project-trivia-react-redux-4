@@ -40,7 +40,9 @@ class GameScreen extends Component {
   }
 
   async componentDidMount() {
-    await fetch('https://opentdb.com/api.php?amount=5')
+    const { category, difficulty, type } = this.props;
+    const API_URL = `https://opentdb.com/api.php?amount=5&category=${category}&difficulty=${difficulty}&type=${type}`;
+    await fetch(API_URL)
       .then((response) => response.json())
       .then((obj) => obj.results)
       .then((data) => {
@@ -177,6 +179,9 @@ const mapStateToProps = (state) => ({
   remainingTime: state.gameReducer.timer,
   assertions: state.playerReducer.player.assertions,
   score: state.playerReducer.player.score,
+  category: state.settingsReducer.category,
+  difficulty: state.settingsReducer.difficulty,
+  type: state.settingsReducer.type,
 });
 
 const mapDispatchToProps = {
@@ -192,6 +197,9 @@ GameScreen.propTypes = {
   remainingTime: PropTypes.number.isRequired,
   score: PropTypes.number.isRequired,
   assertions: PropTypes.number.isRequired,
+  category: PropTypes.number.isRequired,
+  difficulty: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameScreen);
