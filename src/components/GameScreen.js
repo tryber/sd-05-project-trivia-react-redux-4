@@ -73,14 +73,15 @@ class GameScreen extends Component {
   }
 
   rightAnswerButton(correctAnswer, rightAnswer, difficulty) {
-    const { addScore, remainingTime } = this.props;
-    const playerScore = 10 + (remainingTime * multiplier(difficulty));
+    const { score, assertions, addScore, remainingTime } = this.props;
+    const playerScore = score + 10 + (remainingTime * multiplier(difficulty));
+    const playerAssertions = assertions + 1;
     return (
       <button
         data-testid="correct-answer" className={rightAnswer}
         disabled={remainingTime === 0}
         // https://stackoverflow.com/questions/26069238/call-multiple-functions-onclick-reactjs
-        onClick={() => { this.highlightAnswers(); addScore(playerScore); }}
+        onClick={() => { this.highlightAnswers(); addScore(playerScore, playerAssertions); }}
       >
         {correctAnswer}
       </button>
@@ -174,6 +175,8 @@ class GameScreen extends Component {
 
 const mapStateToProps = (state) => ({
   remainingTime: state.gameReducer.timer,
+  assertions: state.playerReducer.player.assertions,
+  score: state.playerReducer.player.score,
 });
 
 const mapDispatchToProps = {
@@ -187,6 +190,8 @@ GameScreen.propTypes = {
   changeQuestion: PropTypes.func.isRequired,
   addScore: PropTypes.func.isRequired,
   remainingTime: PropTypes.number.isRequired,
+  score: PropTypes.number.isRequired,
+  assertions: PropTypes.number.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameScreen);

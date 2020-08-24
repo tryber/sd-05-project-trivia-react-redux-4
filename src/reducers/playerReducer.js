@@ -25,8 +25,8 @@ function savePlayerScore(state, value) {
     ...state,
     player: {
       ...state.player,
-      assertions: state.player.assertions + 1,
-      score: state.player.score + value.player.score,
+      assertions: value.player.assertions,
+      score: value.player.score,
     },
   }));
 }
@@ -49,8 +49,8 @@ const playerReducer = (state = INITIAL_STATE, action) => {
         ...state,
         player: {
           ...state.player,
-          assertions: state.player.assertions + 1,
-          score: state.player.score + action.player.score,
+          assertions: action.player.assertions,
+          score: action.player.score,
         },
       };
     default:
