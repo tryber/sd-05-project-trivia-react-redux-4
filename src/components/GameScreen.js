@@ -7,6 +7,25 @@ import './Components.css';
 import { stopTimer, nextQuestion } from '../actions/gameActions';
 import { getPlayerScore } from '../actions/playerActions';
 
+// https://stackoverflow.com/questions/
+// 44195322/a-plain-javascript-way-to-decode-html-entities-works-on-both-browsers-and-node
+function decodeEntities(encodedString) {
+  const translateRe = /&(nbsp|amp|quot|lt|gt);/g;
+  const translate = {
+    nbsp: ' ',
+    amp: '&',
+    quot: '"',
+    lt: '<',
+    gt: '>',
+  };
+  return encodedString.replace(translateRe, function (match, entity) {
+    return translate[entity];
+  }).replace(/&#(\d+);/gi, function (match, numStr) {
+    const num = parseInt(numStr, 10);
+    return String.fromCharCode(num);
+  });
+}
+
 // https://stackoverflow.com/questions/6274339/how-can-i-shuffle-an-array#6274398
 function shuffle(correct, incorrect) {
   const array = [correct, ...incorrect];
@@ -146,12 +165,12 @@ class GameScreen extends Component {
             return (
               <section>
                 <p data-testid="question-category">{category}</p>
-                <p data-testid="question-text">{question}</p>
+                <p data-testid="question-text">{decodeEntities(question)}</p>
                 {shuffled[questionIndex].map((answer, index) =>
                   (answer === correctAnswer ? (
-                    this.rightAnswerButton(correctAnswer, rightAnswer, difficulty)
+                    this.rightAnswerButton(decodeEntities(correctAnswer), rightAnswer, difficulty)
                   ) : (
-                    this.wrongAnswerButton(wrongAnswer, answer, index)
+                    this.wrongAnswerButton(wrongAnswer, decodeEntities(answer), index)
                   )),
                 )}
                 {this.feedbackButton(hidden, remainingTime)}
