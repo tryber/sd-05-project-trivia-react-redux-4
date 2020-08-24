@@ -40,7 +40,9 @@ class GameScreen extends Component {
   }
 
   async componentDidMount() {
-    await fetch('https://opentdb.com/api.php?amount=5')
+    const { category, difficulty, type } = this.props;
+    const API_URL = `https://opentdb.com/api.php?amount=5&category=${category}&difficulty=${difficulty}&type=${type}`;
+    await fetch(API_URL)
       .then((response) => response.json())
       .then((obj) => obj.results)
       .then((data) => {
@@ -73,14 +75,15 @@ class GameScreen extends Component {
   }
 
   rightAnswerButton(correctAnswer, rightAnswer, difficulty) {
-    const { addScore, remainingTime } = this.props;
-    const playerScore = 10 + (remainingTime * multiplier(difficulty));
+    const { score, assertions, addScore, remainingTime } = this.props;
+    const playerScore = score + 10 + (remainingTime * multiplier(difficulty));
+    const playerAssertions = assertions + 1;
     return (
       <button
         data-testid="correct-answer" className={rightAnswer}
         disabled={remainingTime === 0}
         // https://stackoverflow.com/questions/26069238/call-multiple-functions-onclick-reactjs
-        onClick={() => { this.highlightAnswers(); addScore(playerScore); }}
+        onClick={() => { this.highlightAnswers(); addScore(playerScore, playerAssertions); }}
       >
         {correctAnswer}
       </button>
@@ -174,6 +177,11 @@ class GameScreen extends Component {
 
 const mapStateToProps = (state) => ({
   remainingTime: state.gameReducer.timer,
+  assertions: state.playerReducer.player.assertions,
+  score: state.playerReducer.player.score,
+  category: state.settingsReducer.category,
+  difficulty: state.settingsReducer.difficulty,
+  type: state.settingsReducer.type,
 });
 
 const mapDispatchToProps = {
@@ -187,6 +195,11 @@ GameScreen.propTypes = {
   changeQuestion: PropTypes.func.isRequired,
   addScore: PropTypes.func.isRequired,
   remainingTime: PropTypes.number.isRequired,
+  score: PropTypes.number.isRequired,
+  assertions: PropTypes.number.isRequired,
+  category: PropTypes.number.isRequired,
+  difficulty: PropTypes.string.isRequired,
+  type: PropTypes.string.isRequired,
 };
 
 export default connect(mapStateToProps, mapDispatchToProps)(GameScreen);

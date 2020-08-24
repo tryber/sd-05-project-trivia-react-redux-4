@@ -11,10 +11,10 @@ function playerRankings(avatar, results) {
 
   if (!localStorage.getItem('ranking')) {
     localStorage.setItem('ranking', JSON.stringify([newPlayer]));
-  } else {
-    const rankings = [...JSON.parse(localStorage.getItem('ranking')), newPlayer];
-    localStorage.setItem('ranking', JSON.stringify(rankings));
+    return;
   }
+  const rankings = [...JSON.parse(localStorage.getItem('ranking')), newPlayer];
+  localStorage.setItem('ranking', JSON.stringify(rankings));
 }
 
 const buttonRanking = (avatar, results) => (
